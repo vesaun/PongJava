@@ -1,0 +1,63 @@
+//(c) A+ Computer Science
+//www.apluscompsci.com
+//Name - vesanu
+//Date - 
+//Period - 
+
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.Random;
+
+class InvisibleBallShrestha extends BallShrestha 
+{
+//constructors
+   public InvisibleBallShrestha()
+   {
+		super(); //calls BallShrestha
+   }
+
+   public InvisibleBallShrestha(int x, int y)
+   {
+      super(x,y);
+   }
+
+   public InvisibleBallShrestha(int x, int y, int wid, int ht)
+   {
+      super(x,y,wid,ht);
+
+
+   }
+
+   public InvisibleBallShrestha(int x, int y, int wid, int ht, int xSpd, int ySpd)
+   {
+      super(x,y,wid,ht);
+      super.setXS(xSpd); //must call specific methods because BallSchlesinger does not have this constructor
+      super.setYS(ySpd);
+   }
+
+   public InvisibleBallShrestha(int x, int y, int wid, int ht, Color col, int xSpd, int ySpd)
+   {
+      super(x,y,wid,ht,col,xSpd,ySpd);
+   }
+
+   public Color getColor()
+   {
+      int x = (int)(Math.random()*10); //random number between 1-10
+      if (x<5)
+         return Color.BLACK;
+      else
+         return super.getColor(); //else, draw black
+   }
+   public void moveAndDraw(Graphics window) //moving ball 
+   { 
+   	//can't see anymore the ball
+      draw(window, Color.BLACK);
+
+      setX(getX()+getXS());
+		setY(getY()+getYS());
+
+		//draw the ball at its new location
+      draw(window, getColor());
+   }
+}
