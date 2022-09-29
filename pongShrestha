@@ -1,0 +1,277 @@
+//(c) A+ Computer Science
+//www.apluscompsci.com
+//Name - vesaun 
+//Date - 
+//Period - 
+
+import java.awt.Color; 
+import java.awt.Graphics; 
+import java.awt.Graphics2D; 
+import java.awt.Canvas; 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener; 
+import java.awt.event.KeyListener; 
+import java.awt.event.KeyEvent;
+import static java.lang.Character.*; 
+import java.awt.image.BufferedImage;
+
+
+public class PongShrestha extends Canvas implements KeyListener, Runnable
+{
+	private BallShrestha ball; //instantiate ball object
+	private PaddleShrestha leftPaddle; //left paddle
+	private PaddleShrestha rightPaddle; //right paddle
+   private BlockShrestha wallT; //top wall
+   private BlockShrestha wallB; //bottom wall
+   private BlockShrestha wallR; //right wall
+   private BlockShrestha wallL; //left wall
+   private BlockShrestha cancel; 
+	private boolean[] keys; 
+	private BufferedImage back; 
+   private int score1,score2=0;  //to keep score
+
+
+	public PongShrestha()
+	{
+		
+      //create array
+		keys = new boolean[11];
+  		//instantiating variables now
+		leftPaddle = new PaddleShrestha(10,260,10,40,Color.RED);
+		rightPaddle = new PaddleShrestha(780,260,10,40,Color.BLUE);
+      wallT = new BlockShrestha(0,0,1000,22, Color.WHITE);
+      wallB = new BlockShrestha(0,496,1000,2, Color.WHITE);
+      wallR = new BlockShrestha(798,0,2,1000,Color.WHITE);
+      wallL = new BlockShrestha(0,0,2,1000, Color.WHITE);
+      cancel = new BlockShrestha(50,50,700,600,Color.BLACK);
+      setBackground(Color.BLACK); 
+		setVisible(true); 
+		
+      //starts the key thread to log key strokes
+		new Thread(this).start();
+		addKeyListener(this);	
+	}
+	
+   public void update(Graphics window){
+	   paint(window);
+   }
+
+   public void paint(Graphics window)
+   {
+		Graphics2D twoDGraph = (Graphics2D)window;
+
+		//back will be used as a image for the future frames
+		if(back==null)
+		   back = (BufferedImage)(createImage(getWidth(),getHeight()));
+
+		//keep drawing on the back and using this as a reference 
+		Graphics graphToBack = back.createGraphics();
+      
+      
+      if (!keys[4] && !keys[9])
+      {
+         //draw paddles, walls
+		   leftPaddle.draw(graphToBack); 
+		   rightPaddle.draw(graphToBack);
+         wallB.draw(graphToBack);
+         wallT.draw(graphToBack);
+         wallR.draw(graphToBack);
+         wallL.draw(graphToBack);
+         //print out infor to choose game play
+         graphToBack.setColor(Color.WHITE); //white text
+         graphToBack.drawString("Play with a Regular Ball ('R'), SpeedUp Ball ('U'), Blinky Ball ('B'), or Invisible Ball ('I')", 100,100);
+         if(keys[5]==true || keys[6]==true || keys[7]==true || keys[8]==true) //if one of the keys is pressed display ready to play string
+            graphToBack.drawString("Press 'G' To Play",getWidth()/2-30,150);
+         if (keys[5]==true)
+            ball = new BallShrestha(395,100,10,10,Color.WHITE,2,1); //if key is pressed instantiate ball
+         if (keys[6]==true)
+            ball = new SpeedUpBallShrestha(395,100,10,10,Color.GREEN,2,1); //if key is pressed instantiate type of ball (SpeedUp)
+         if (keys[7]==true)
+            ball = new BlinkyBallShrestha(395,100,10,10,2,1);//if key is pressed instantiate type of ball (Blinky)
+         if (keys[8]==true)
+            ball = new InvisibleBallShrestha(395,100,10,10,Color.ORANGE,2,1);//if key is pressed instantiate type of ball (invisible)
+      }
+      
+      //pause button
+      if(keys[9]) 
+      {
+         keys[4]=false; 
+         wallT.draw(graphToBack); //draws top wall 
+         graphToBack.setColor(Color.BLACK);//black text
+         graphToBack.drawString("SCORE: " + score1 + " - " + score2+"", getWidth()/2-30,15); 
+         graphToBack.drawString("PRESS 'Y' TO UNPAUSE", 600,15); //pause to unpause
+         graphToBack.setColor(Color.WHITE); 
+         graphToBack.drawString("PAUSED", 400,400); //pause game
+      } 
+      
+      //unpause button
+      if (keys[10])
+      {
+         keys[9]=false; //unpause
+         keys[4]=true; //game play resumes
+         graphToBack.setColor(Color.BLACK); ///gameplay black
+         graphToBack.fillRect(380,380,50,30); //draw rect over paused text to resume game
+      }
+      
+          
+      //regular game play
+      if (keys[4]==true)
+      {
+         keys[9]=false; //not paused
+         keys[10]=false; //resets unpause button so that it can be pressed again after pause is pressed
+         cancel.draw(graphToBack); //draws rectangle over intro text
+         ball.moveAndDraw(graphToBack); //draws moving ball
+		   leftPaddle.draw(graphToBack); //draw paddles at current location
+		   rightPaddle.draw(graphToBack); 
+         wallB.draw(graphToBack);
+         wallT.draw(graphToBack);
+         wallR.draw(graphToBack);
+         wallL.draw(graphToBack);
+         graphToBack.setColor(Color.BLACK); //sets color of text
+         graphToBack.drawString("SCORE: " + score1 + " - " + score2+"", getWidth()/2-30,15); //displays score
+         graphToBack.drawString("PRESS 'T' TO PAUSE", 600,15); //indicates pause button
+      
+		   //see if ball hits right wall
+		   if(ball.didCollideRight(wallR))
+		   {
+            //make paddle and ball invisible at previous position
+            leftPaddle.draw(graphToBack, Color.BLACK); 
+            rightPaddle.draw(graphToBack, Color.BLACK);
+            ball.draw(graphToBack,Color.BLACK);
+            ball.setPos(395,100); //set starting position of ball
+            ball.setXS(2); //set speed towards right paddle
+            ball.setYS(1);
+            leftPaddle.setPos(10,260); //set position of left paddle
+            rightPaddle.setPos(780,260); //set position of right paddle
+            score1++; //increase left paddle (p1) score
+		   }
+         //see if ball hits left wall
+         if(ball.didCollideLeft(wallL))
+		   {
+            //draw paddles and ball invisible at previous location
+            leftPaddle.draw(graphToBack, Color.BLACK);
+            rightPaddle.draw(graphToBack,Color.BLACK);
+            ball.draw(graphToBack,Color.BLACK);
+            ball.setPos(395,100); //set starting position of ball
+            ball.setXS(-2); //set speed of ball towards left paddle
+            ball.setYS(1); 
+            leftPaddle.setPos(10,260); //set position of left paddle (centered)
+            rightPaddle.setPos(780,260); //set postion of right paddle (centered)
+            score2++; //increase score of right paddle (p2)
+		   }
+
+		   //see if the ball hits the top or bottom wall 
+         if (ball.didCollideTop(wallT) || ball.didCollideBottom(wallB))
+         {
+            ball.setYS(-ball.getYS()); //inverse YS to bounce
+         }
+      
+		   //see if the ball hits the left paddle
+		   if (ball.didCollideLeft(leftPaddle))
+         {
+            if (ball.getXS()<0) //make sure ball only bounces once and doesn't lag
+            {
+               ball.setXS(-ball.getXS()); //inverse XS to bounce off paddle
+            }
+		   }
+      	
+		   //see if the ball hits the right paddle
+		   if (ball.didCollideRight(rightPaddle))
+         {
+            if (ball.getXS()>0) //make sure ball only bounces once and doesn't lage
+           {
+               ball.setXS(-ball.getXS()); //inverse XS to bounce off paddle
+           }
+		   }
+      
+		//see if the paddles need to be moved
+         //if W is pressed
+         if(keys[0] == true)
+		   {
+		   	//move left paddle up and draw it on the window
+		   	if(!leftPaddle.didCollideTop(wallT)) //if paddle is not touching top wall (range of paddle)
+               leftPaddle.moveUpAndDraw(graphToBack);
+		   }
+         
+         //is S is pressed
+		   if(keys[1] == true)
+		   {
+		   	//move left paddle down and draw it on the window
+            if(!leftPaddle.didCollideBottom(wallB)) //if paddle is not touching bottom wall (range of paddle)
+               leftPaddle.moveDownAndDraw(graphToBack);
+		   }
+      
+         //if K is pressed
+		   if(keys[2] == true)
+		   {
+            //move right paddle up and draw it on the window
+            if(!rightPaddle.didCollideTop(wallT)) //if paddle is not touching top wall (range of paddle)
+               rightPaddle.moveUpAndDraw(graphToBack);
+		   }
+         
+         //if M is pressed
+		   if(keys[3] == true)
+		   {
+            //move right paddle down and draw it on window
+            if(!rightPaddle.didCollideBottom(wallB)) //if paddle is not touching bottom wall (range of paddle)
+               rightPaddle.moveDownAndDraw(graphToBack);
+		   }
+		}
+		twoDGraph.drawImage(back, null, 0, 0); //draw all updates to background
+	}
+
+   //if key pressed occurs
+	public void keyPressed(KeyEvent e)
+	{
+		switch(toUpperCase(e.getKeyChar())) //switches all key events to caps to eliminate effects of shift or caps lock
+		{
+         //move paddles (only true when key is pressed
+			case 'W' : keys[0]=true; break; //if W pressed set boolean to true
+			case 'S' : keys[1]=true; break; //if S pressed set boolean to true
+			case 'K' : keys[2]=true; break; //if K pressed set boolean to true
+			case 'M' : keys[3]=true; break; //if M pressed set boolean to true 
+         
+		}
+	}
+ 
+   //if key is released  
+	public void keyReleased(KeyEvent e)
+	{
+      switch(toUpperCase(e.getKeyChar()))
+		{
+         //move paddles
+         
+         //these test cases will dictate whether or not a button is being held down, indicated by true or false
+			case 'W' : keys[0]=false; break; 
+			case 'S' : keys[1]=false; break;
+			case 'K' : keys[2]=false; break;
+			case 'M' : keys[3]=false; break;
+         //play game
+         
+         //when each of these keys are released, the booelean turns true to improve gameplay
+         case 'G' : keys[4]=true; break; 
+         case 'R' : keys[5]=true; break; 
+         case 'U' : keys[6]=true; break; 
+         case 'B' : keys[7]=true; break; 
+         case 'I' : keys[8]=true; break;
+         case 'T' : keys[9]=true; break;
+         case 'Y' : keys[10]=true; break; 
+  		}
+	}
+
+	public void keyTyped(KeyEvent e){}
+	
+   public void run()
+   {
+   	try
+   	{
+   		while(true)
+   		{
+   		   Thread.currentThread().sleep(8);
+            repaint();
+         }
+      }catch(Exception e)
+      {
+      }
+  	}	
+}
