@@ -1,0 +1,67 @@
+//(c) A+ Computer Science
+//www.apluscompsci.com
+//Name -  vesaun
+//Date - 
+//Period -
+
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.Random;
+
+class BlinkyBallShrestha extends BallShrestha //type of ball
+{
+//constructors
+   public BlinkyBallShrestha()
+   {
+		super();
+   }
+
+   public BlinkyBallShrestha(int x, int y)
+   {
+      super(x,y);
+   }
+
+   public BlinkyBallShrestha(int x, int y, int wid, int ht)
+   {
+      super(x,y,wid,ht);
+   }
+
+   public BlinkyBallShrestha(int x, int y, int wid, int ht, int xSpd, int ySpd)
+   {
+      super(x,y,wid,ht);
+      super.setXS(xSpd);
+      super.setYS(ySpd);
+   }
+
+   public BlinkyBallShrestha(int x, int y, int wid, int ht, Color col, int xSpd, int ySpd)
+   {
+      super(x,y,wid,ht,col,xSpd,ySpd);
+   }
+
+   //generates random color
+   public Color randomColor()
+   {
+      //use math.random for random color
+      
+      //3 random numbers between 1 and 255 and assign each to red, blue, green
+   	int r = (int)(Math.random()*255);		
+ 		int g = (int)(Math.random()*255);      
+ 		int b = (int)(Math.random()*255);      
+ 		return new Color(r,g,b); 
+   }
+
+   public void moveAndDraw(Graphics window) 
+   {
+      //draws black ball in previous location
+      super.draw(window, Color.BLACK);
+
+      //balls new position based off speed
+      setX(getX()+getXS());
+		setY(getY()+getYS());
+      setColor(randomColor()); //sets color of new ball to a random color
+
+		//draw the ball at its new location with random color
+      draw(window, super.getColor());
+   }
+}
