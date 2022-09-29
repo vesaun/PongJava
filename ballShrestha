@@ -1,0 +1,101 @@
+//(c) A+ Computer Science
+//www.apluscompsci.com
+//Name - vesaun
+//Date - 
+//Period - 
+
+//imports color/JFramaae
+import java.awt.Color;
+import java.awt.Graphics;
+
+public class BallShrestha extends BlockShrestha  //ball extends other class
+{
+	private int xSpeed; //side to side speed
+	private int ySpeed; //up / down
+   
+//initialize
+	public BallShrestha()
+	{
+		super(200,200); //super will use block shrestha
+		xSpeed = 3; 
+		ySpeed = 1; //initialiazing^^
+	}
+
+	//more initialization
+	
+	public BallShrestha(int x, int y)
+   {
+      super(x,y);
+		xSpeed = 3;
+		ySpeed = 1;
+	}
+   public BallShrestha(int x, int y, int w, int h)
+   {
+      super(x,y,w,h); 
+		xSpeed = 3;
+		ySpeed = 1;
+   }
+   public BallShrestha(int x, int y, int w, int h, Color c)
+   {
+      super(x,y,w,h,c);
+		xSpeed = 3;
+		ySpeed = 1;
+	}
+	public BallShrestha(int x, int y, int w, int h, Color c, int xs, int ys)
+   {
+      super(x,y,w,h,c);
+		xSpeed = xs;
+		ySpeed = ys;
+	}
+		   
+//methods for setting
+   public void setSpeed(int xs, int ys) //x and y speeds
+   {
+      setXS(xs); 
+      setYS(ys); 
+   }
+   
+   public void setXS(int xs) 
+   {
+      xSpeed = xs; 
+   }
+      
+   public void setYS(int ys) 
+   {
+      ySpeed = ys; 
+   }
+
+
+   public void moveAndDraw(Graphics window) //make the ball able to move
+   {
+      draw(window, Color.BLACK);
+      setX(getX()+xSpeed); //adding "speed" to the ball
+		setY(getY()+ySpeed);
+      draw(window, super.getColor()); //illusion of a moving ball
+   }
+   
+	public boolean equals(Object ob) //checks for same balls
+	{
+      BallShrestha obj = (BallShrestha) ob; 
+      return (getX()==obj.getX() && getY()==obj.getY() && getWidth()==obj.getWidth() && getHeight()==obj.getHeight() && getXS()==obj.getXS() && getYS()==obj.getYS());
+
+	}    
+   
+
+//to return certain variables
+   public int getXS() 
+   {
+      return xSpeed;
+   }
+   
+   public int getYS() 
+   {
+      return ySpeed;
+   }
+
+   //add a toString() method
+   public String toString()
+   {
+      return super.toString() + " " + getXS() + " " + getYS();
+   }
+}
