@@ -1,0 +1,53 @@
+//(c) A+ Computer Science
+//www.apluscompsci.com
+//Name - vesaun
+//Date - 
+//Period - 
+
+import java.awt.Color; //color
+import java.awt.Graphics; //draw on window
+
+class SpeedUpBallShrestha extends BallShrestha
+{   
+//constructors
+   //default
+   public SpeedUpBallShrestha()
+   {
+      super();
+
+   }
+   //other constructor forms
+   public SpeedUpBallShrestha(int x, int y)
+   {
+      super(x,y);
+
+   }
+   
+   public SpeedUpBallShrestha(int x, int y, int wid, int ht, Color col, int xSpd, int ySpd)
+   {
+      super(x,y,wid,ht,col,xSpd,ySpd);
+   }
+
+//setter method
+   //overides BallShrestha methods
+   public void setXS(int xs)
+   {
+      if (xs>0) //if input XS is positive
+      {
+         super.setXS(xs+1); //BallSchlesinger method setXS plus one to increase speed
+         //increase YS with XS
+         if (getYS()>0) //if YS is positive
+            super.setYS(getYS()+1); //BallSchlesinger method setYS plus one to increase speed
+         if (getYS()<0) //if YS is negative
+            super.setYS(getYS()-1); //super method minus one to increase speed
+      }
+      if (xs<0) //if input XS is negative
+      {
+         super.setXS(xs-1); //super method minus one to increase speed
+         if (getYS()>0) //if YS is positive
+            super.setYS(getYS()+1); //super method plus one to increase speed
+         if (getYS()<0) //if YS is negative
+            super.setYS(getYS()-1); //super method minus one to increase speed
+      }
+   }
+}
