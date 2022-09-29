@@ -1,0 +1,15 @@
+//(c) A+ Computer Science
+//www.apluscompsci.com
+//Name - vesaun
+//Date -  
+//Period - 
+
+import java.awt.Color;
+
+public interface CollidableShrestha //interface
+{
+    public boolean didCollideTop(Object obj); //see if an object collide above
+    public boolean didCollideBottom(Object obj); //if obj collide below
+    public boolean didCollideLeft(Object obj); //to the left collide
+    public boolean didCollideRight(Object obj); //and to right
+}
