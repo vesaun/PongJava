@@ -1,0 +1,31 @@
+//Final project for AP Computer Science, simple pong game.
+
+import javax.swing.JFrame;
+import java.awt.Component;
+
+public class TheGameShrestha extends JFrame
+{
+   //window size width x height
+	private static final int WIDTH = 800;
+	private static final int HEIGHT = 520;
+
+	public TheGameShrestha()
+	{
+		super("PONG"); //name of window
+		setSize(WIDTH,HEIGHT); //assign size of window
+
+		PongShrestha game = new PongShrestha(); //create a new game
+
+      //display game to window
+		((Component)game).setFocusable(true);
+		getContentPane().add(game);
+		setVisible(true); //see game
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //to end program on xing out
+	}
+
+	public static void main( String args[] )
+	{
+		TheGameShrestha run = new TheGameShrestha();//play on!!! 
+	}
+}
