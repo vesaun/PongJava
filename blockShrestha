@@ -1,0 +1,163 @@
+//(c) A+ Computer Science
+//www.apluscompsci.com
+//Name - vesaun 
+//Date - 
+//Period - 
+
+import java.awt.Color;
+import java.awt.Graphics;
+//LocatableShrestha
+
+public class BlockShrestha implements CollidableShrestha //implements these classes
+{
+   //size color position
+	private int xPos;
+	private int yPos;
+	private int width;
+	private int height;
+	private Color color;
+
+//constructors
+	//default
+   public BlockShrestha()
+	{
+      xPos = 100;
+      yPos = 100;
+      width = 10;
+      height = 10;
+      color = Color.BLACK;
+	}
+
+	//x,y, width height color constructors
+	public BlockShrestha(int x, int y)
+   {
+      xPos = x;
+      yPos = y;
+      width = 10;
+      height = 10;
+      color = Color.BLACK;
+	}
+   public BlockShrestha(int x, int y, int w, int h)
+   {
+      xPos = x;
+      yPos = y;
+      width = w;
+      height = h;
+      color = Color.BLACK;
+   }
+   public BlockShrestha(int x, int y, int w, int h, Color c)
+   {
+      xPos = x;
+      yPos = y;
+      width = w;
+      height = h;
+      color = c;
+	}
+
+//set variables   
+   public void setPos(int x, int y) //sets position of block
+   {
+      setX(x);
+      setY(y);
+   }
+   public void setX(int x) //sets x
+   {
+      xPos = x;
+   }
+   public void setY(int y) //sets y
+   {
+      yPos = y;
+   }
+   public void setWidth(int w) //sets width of block
+   {
+      width = w;
+   }
+   public void setHeight(int h) //sets height of block 
+   {
+      height = h;
+   }      
+
+   public void setColor(Color col) //sets color
+   {
+      color = col;
+   }
+
+   public void draw(Graphics window) //draw block to screen
+   {
+      window.setColor(getColor()); //sets color of block to input color
+      window.fillRect(getX(), getY(), getWidth(), getHeight()); 
+   } 
+
+   public void draw(Graphics window, Color col) //draw in certain color "col"
+   {
+      window.setColor(col); 
+      window.fillRect(getX(),getY(), getWidth(), getHeight()); 
+
+   }
+   
+	public boolean equals(Object ob) //checks if obj is a block
+	{
+      BlockShrestha obj = (BlockShrestha)ob; 
+      return (getX()==obj.getX() && getY()==obj.getY() && getWidth()==obj.getWidth() && getHeight()==obj.getHeight()); 
+	}
+//CollidableShrestha calling
+   public boolean didCollideTop(Object obj) //checks if collided == true
+   {
+      BlockShrestha ob = (BlockShrestha) obj; 
+      if (getY()<= ob.getY()+ob.getHeight() && getX()>=ob.getX() && getX()<= ob.getX() + ob.getWidth()) 
+         return true;
+      return false;
+   }
+   
+   public boolean didCollideBottom(Object obj) //checks if the bottom of the object collided
+   {
+      BlockShrestha ob = (BlockShrestha) obj;
+      if (getY()+getHeight()>= ob.getY() && getX()>=ob.getX() && getX()<= ob.getX() + ob.getWidth())
+         return true;
+      return false;
+   }
+   
+   public boolean didCollideRight(Object obj) //if collided on its right
+   {
+      BlockShrestha ob = (BlockShrestha) obj;
+      if (getX()+getWidth()>= ob.getX() && getY()>=ob.getY() && getY()<= ob.getY()+ob.getHeight())
+         return true;
+      return false;
+   }
+   
+   public boolean didCollideLeft(Object obj) //and then to its left
+   {
+      BlockShrestha ob = (BlockShrestha) obj;
+      if (getX()<= ob.getX()+ob.getWidth() && getY()>=ob.getY() && getY()<= ob.getY() + ob.getHeight())
+         return true;
+      return false;
+   }   
+
+//get x y width height and color
+   public int getX() 
+   {
+      return xPos;
+   }
+   public int getY() 
+   {
+      return yPos;
+   }
+   public int getWidth() 
+   {
+      return width;
+   }
+   public int getHeight() 
+   {
+      return height;
+   }
+   public Color getColor()  
+   {
+      return color;
+   }
+
+   //tostring
+   public String toString()
+   {
+      return getX() + " " + getY() + " " + getWidth() + " " + getHeight() + " " + getColor();
+   }
+}
