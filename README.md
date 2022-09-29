@@ -18,3 +18,4 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
 Also works with classes implementing one another, as seen in blockShrestha, which implements the collisionCheck class.
+Utilizes classes extending one another, as seen in ballShrestha, which extends blockShrestha.
